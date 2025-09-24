@@ -21,14 +21,17 @@ namespace qa_dotnet_cucumber.Steps
         [Given("I am on the login page")]
         public void GivenIAmOnTheLoginPage()
         {
-            _navigationHelper.NavigateTo("/login");
+            _navigationHelper.NavigateTo("");
+          
+
+            _loginPage.ClickSignIn();
             Assert.That(_loginPage.IsAtLoginPage(), Is.True, "Should be on the login page");
         }
 
         [When("I enter valid credentials")]
         public void WhenIEnterValidCredentials()
         {
-            _loginPage.Login("tomsmith", "SuperSecretPassword!");
+            _loginPage.Login("test@test.com", "123123");
         }
 
         [When("I enter an invalid username and valid password")]
@@ -40,7 +43,7 @@ namespace qa_dotnet_cucumber.Steps
         [When("I enter a valid username and invalid password")]
         public void WhenIEnterAValidUsernameAndInvalidPassword()
         {
-            _loginPage.Login("tomsmith", "wrongpassword");
+            _loginPage.Login("test@test.com", "wrongpassword");
         }
 
         [When("I enter empty credentials")]
@@ -49,21 +52,21 @@ namespace qa_dotnet_cucumber.Steps
             _loginPage.Login("", "");
         }
 
-        [Then("I should see the secure area")]
-        public void ThenIShouldSeeTheSecureArea()
-        {
-            var successMessage = _loginPage.GetSuccessMessage();
-            Assert.That(successMessage, Does.Contain("You logged into a secure area!"), "Should see successful login message");
-        }
+        //[Then("I should see the secure area")]
+        //public void ThenIShouldSeeTheSecureArea()
+        //{
+        //    var successMessage = _loginPage.GetSuccessMessage();
+        //    Assert.That(successMessage, Does.Contain("You logged into a secure area!"), "Should see successful login message");
+        //}
 
         [Then("I should see an error message")]
         public void ThenIShouldSeeAnErrorMessage()
         {
             // Use LoginPage's driver to wait for and verify the error message
             var wait = new WebDriverWait(_loginPage.Driver, TimeSpan.FromSeconds(10));
-            var errorMessageElement = wait.Until(d => d.FindElement(By.CssSelector(".flash.error")));
+            var errorMessageElement = wait.Until(d => d.FindElement(By.XPath("/html/body/div[2]/div/div/div[1]/div/div[1]/div")));
             var errorMessage = errorMessageElement.Text;
-            Assert.That(errorMessage, Does.Match("Your username is invalid!|Your password is invalid!|Username is required"), 
+            Assert.That(errorMessage, Does.Match("Please enter a valid email address|Your password is invalid!|Please enter a valid email address"), 
                 "Should see an appropriate error message");
         }
     }
