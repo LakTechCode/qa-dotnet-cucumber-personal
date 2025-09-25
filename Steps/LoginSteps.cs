@@ -37,7 +37,7 @@ namespace qa_dotnet_cucumber.Steps
         [When("I enter an invalid username and valid password")]
         public void WhenIEnterAnInvalidUsernameAndValidPassword()
         {
-            _loginPage.Login("invaliduser", "SuperSecretPassword!");
+            _loginPage.Login("invaliduser", "123123");
         }
 
         [When("I enter a valid username and invalid password")]
@@ -52,12 +52,13 @@ namespace qa_dotnet_cucumber.Steps
             _loginPage.Login("", "");
         }
 
-        //[Then("I should see the secure area")]
-        //public void ThenIShouldSeeTheSecureArea()
-        //{
-        //    var successMessage = _loginPage.GetSuccessMessage();
-        //    Assert.That(successMessage, Does.Contain("You logged into a secure area!"), "Should see successful login message");
-        //}
+        [Then("I should see the secure area")]
+        public void ThenIShouldSeeTheSecureArea()
+       
+        {
+           var successMessage = _loginPage.GetSuccessMessage();
+           Assert.That(successMessage, Does.Contain("Hi Lakshmi"), "Should see successful login message");
+        }
 
         [Then("I should see an error message")]
         public void ThenIShouldSeeAnErrorMessage()
@@ -66,7 +67,7 @@ namespace qa_dotnet_cucumber.Steps
             var wait = new WebDriverWait(_loginPage.Driver, TimeSpan.FromSeconds(10));
             var errorMessageElement = wait.Until(d => d.FindElement(By.XPath("/html/body/div[2]/div/div/div[1]/div/div[1]/div")));
             var errorMessage = errorMessageElement.Text;
-            Assert.That(errorMessage, Does.Match("Please enter a valid email address|Your password is invalid!|Please enter a valid email address"), 
+            Assert.That(errorMessage, Does.Match("Please enter a valid email address|Sign In"), 
                 "Should see an appropriate error message");
         }
     }

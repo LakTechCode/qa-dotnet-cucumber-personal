@@ -14,10 +14,10 @@ namespace qa_dotnet_cucumber.Pages
 
         // Locators
         private readonly By SigninButton = By.XPath("//*[@id=\"home\"]/div/div/div[1]/div/a");
-        private readonly By UsernameField = By.Id("username");
-        private readonly By PasswordField = By.Id("password");
+        private readonly By UsernameField = By.XPath("/html/body/div[2]/div/div/div[1]/div/div[1]/input");
+        private readonly By PasswordField = By.XPath("/html/body/div[2]/div/div/div[1]/div/div[2]/input");
         private readonly By LoginButton = By.XPath("/html/body/div[2]/div/div/div[1]/div/div[4]/button");
-        //private readonly By SuccessMessage = By.CssSelector(".flash.success");
+        private readonly By SuccessMessage = By.XPath("//*[@id=\"account-profile-section\"]/div/div[1]/div[2]/div/span");
 
         public LoginPage(IWebDriver driver) // Inject IWebDriver directly
         {
@@ -46,10 +46,10 @@ namespace qa_dotnet_cucumber.Pages
             loginButtonElement.Click();
         }
 
-        //public string GetSuccessMessage()
-        //{
-        //    return _wait.Until(d => d.FindElement(SuccessMessage)).Text;
-        //}
+        public string GetSuccessMessage()
+        {
+            return _wait.Until(d => d.FindElement(SuccessMessage)).Text;
+        }
 
         public bool IsAtLoginPage()
         {
