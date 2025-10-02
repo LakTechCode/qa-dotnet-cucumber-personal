@@ -1,39 +1,73 @@
-using System;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
+using qa_dotnet_cucumber.Pages;
 using Reqnroll;
+using System;
 
-namespace qa_dotnet_cucumber
+namespace qa_dotnet_cucumber.Steps
 {
     [Binding]
-    public class LanguageFunctionalityStepDefinitions
+    public class LanguageSteps 
+
     {
-        [Given("I am on the Languages tab of the profile section")]
-        public void GivenIAmOnTheLanguagesTabOfTheProfileSection()
+        private readonly LoginPage _loginPage;
+        private readonly NavigationHelper _navigationHelper;
+        private readonly LanguagePage _languagePage;
+
+        public LanguageSteps(LoginPage loginPage, NavigationHelper navigationHelper, LanguagePage languagePage)
         {
-            throw new PendingStepException();
+            _loginPage = loginPage;
+            _navigationHelper = navigationHelper;
+            _languagePage = languagePage;
+        }
+
+        [Given("I am logged in")]
+        public void GivenIAmLoggedIn()
+        {
+            {
+                _navigationHelper.NavigateTo("");
+
+                _loginPage.ClickSignIn();
+                _loginPage.Login("test@test.com", "123123");
+
+                var successMessage = _loginPage.GetSuccessMessage();
+                Assert.That(successMessage, Does.Contain("Hi Lakshmi"), "Should see successful login message");
+            }
         }
 
         [When("I click the Add New button")]
         public void WhenIClickTheAddNewButton()
         {
-            throw new PendingStepException();
+            _languagePage.ClickAddNew();
         }
+
+        [When("I enter the language")]
+        public void WhenIEnterTheLanguage()
+        {
+            _languagePage.AddLanguage("English");
+        }
+
 
         [When("I select the level of proficiency")]
         public void WhenISelectTheLevelOfProficiency()
         {
-            throw new PendingStepException();
+            _languagePage.ProficiencyLevel("Fluent");
         }
 
         [When("I click on the Add button")]
         public void WhenIClickOnTheAddButton()
         {
-            throw new PendingStepException();
+            _languagePage.ClickAdd();
         }
 
         [Then("the language and the level should be displayed in the list")]
         public void ThenTheLanguageAndTheLevelShouldBeDisplayedInTheList()
         {
-            throw new PendingStepException();
+            var wait = new WebDriverWait(_loginPage.Driver, TimeSpan.FromSeconds(10));
+            var addLanguageMessageElement = wait.Until(d => d.FindElement(By.XPath("/html/body/div[2]/div/div/div[1]/div/div[1]/div")));
+            var addLanguageMessage = addLanguageMessageElement.Text;
+            Assert.That(addLanguageMessage, Does.Match("has been added to your languages"),
+                "Should see an appropriate message");
         }
 
         [When("I click on the Cancel button")]
@@ -102,8 +136,8 @@ namespace qa_dotnet_cucumber
             throw new PendingStepException();
         }
 
-        [Then("the {string} button should not be visible")]
-        public void ThenTheButtonShouldNotBeVisible(string p0)
+        [Then("the Add New button should not be visible")]
+        public void ThenTheAddNewButtonShouldNotBeVisible()
         {
             throw new PendingStepException();
         }
