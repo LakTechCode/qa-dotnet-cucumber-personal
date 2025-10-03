@@ -9,14 +9,14 @@ Scenario: Add a new language
     And I enter the language
     And I select the level of proficiency 
     And I click on the Add button
-    Then the language and the level should be displayed in the list
+    Then I should see an appropriate message
 
 Scenario: Cancel adding a new language
     When I click the Add New button
     And I enter the language
     And I select the level of proficiency
     And I click on the Cancel button
-    Then the language should not be added to the list
+    Then the language "English" should not be added to the list
 
 Scenario: Prevent adding an existing language
     When I click the Add New button

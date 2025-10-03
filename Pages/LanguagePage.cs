@@ -22,6 +22,7 @@ namespace qa_dotnet_cucumber.Pages
         private readonly By AddLanguageField = By.XPath("//*[@id='account-profile-section']/div/section[2]/div/div/div/div[3]/form/div[2]/div/div[2]/div/div/div[1]/input");
         private readonly By ProficiencyDropdown = By.XPath("//*[@id='account-profile-section']/div/section[2]/div/div/div/div[3]/form/div[2]/div/div[2]/div/div/div[2]/select");
         private readonly By AddButton = By.XPath("//*[@id='account-profile-section']/div/section[2]/div/div/div/div[3]/form/div[2]/div/div[2]/div/div/div[3]/input[1]");
+        private readonly By CancelButton = By.XPath("//*[@id=\"account-profile-section\"]/div/section[2]/div/div/div/div[3]/form/div[2]/div/div[2]/div/div/div[3]/input[2]");
         public LanguagePage(IWebDriver driver) // Inject IWebDriver directly
         {
             _driver = driver;
@@ -34,11 +35,11 @@ namespace qa_dotnet_cucumber.Pages
             addNewButtonElement.Click();
         }
 
-        public void AddLanguage(string addLanguage)
+        public void AddLanguage(string language)
 
         {
             var addLanguageElement = _wait.Until(ExpectedConditions.ElementToBeClickable(AddLanguageField));
-            addLanguageElement.SendKeys(addLanguage);
+            addLanguageElement.SendKeys(language);
 
         }
 
@@ -58,8 +59,17 @@ namespace qa_dotnet_cucumber.Pages
             addButtonElement.Click();
         }
 
-        
+        public void ClickCancel()
 
+        {
+            var cancelButtonElement = _wait.Until(ExpectedConditions.ElementToBeClickable(CancelButton));
+            cancelButtonElement.Click();
+        }
 
+        public bool IsLanguageInList(string language)
+        {
+            return Driver.FindElements(By.XPath($"//div[text()='{language}']")).Any();
+
+        }
     }
 }

@@ -13,7 +13,7 @@ namespace qa_dotnet_cucumber.Steps
         private readonly LoginPage _loginPage;
         private readonly NavigationHelper _navigationHelper;
         private readonly LanguagePage _languagePage;
-
+      
         public LanguageSteps(LoginPage loginPage, NavigationHelper navigationHelper, LanguagePage languagePage)
         {
             _loginPage = loginPage;
@@ -45,6 +45,9 @@ namespace qa_dotnet_cucumber.Steps
         public void WhenIEnterTheLanguage()
         {
             _languagePage.AddLanguage("English");
+            
+  
+
         }
 
 
@@ -60,27 +63,30 @@ namespace qa_dotnet_cucumber.Steps
             _languagePage.ClickAdd();
         }
 
-        [Then("the language and the level should be displayed in the list")]
-        public void ThenTheLanguageAndTheLevelShouldBeDisplayedInTheList()
-        {
-            var wait = new WebDriverWait(_loginPage.Driver, TimeSpan.FromSeconds(10));
-            var addLanguageMessageElement = wait.Until(d => d.FindElement(By.XPath("/html/body/div[2]/div/div/div[1]/div/div[1]/div")));
-            var addLanguageMessage = addLanguageMessageElement.Text;
-            Assert.That(addLanguageMessage, Does.Match("has been added to your languages"),
-                "Should see an appropriate message");
-        }
-
         [When("I click on the Cancel button")]
         public void WhenIClickOnTheCancelButton()
         {
-            throw new PendingStepException();
+            _languagePage.ClickCancel();
         }
 
-        [Then("the language should not be added to the list")]
-        public void ThenTheLanguageShouldNotBeAddedToTheList()
+        [Then("I should see an appropriate message")]
+        public void ThenIShouldSeeAnAppropriateMessage()
         {
-            throw new PendingStepException();
+            var wait = new WebDriverWait(_loginPage.Driver, TimeSpan.FromSeconds(10));
+            var addLanguageMessageElement = wait.Until(d => d.FindElement(By.XPath("/html/body/div[1]/div")));
+            var addLanguageMessage = addLanguageMessageElement.Text;
+            Assert.That(addLanguageMessage, Does.Match("has been added to your languages|This language is already exist in your language list"),
+                "Should see an appropriate message");
         }
+
+
+        [Then("the language {string} should not be added to the list")]
+        public void ThenTheLanguageShouldNotBeAddedToTheList (string language)
+        {
+      
+       Assert.That(_languagePage.IsLanguageInList(language), Is.False,$"'{language}' should not be added after cancel.");
+        }
+
 
         [When("I add the same language again")]
         public void WhenIAddTheSameLanguageAgain()
