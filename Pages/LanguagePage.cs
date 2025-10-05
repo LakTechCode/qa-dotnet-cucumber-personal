@@ -20,9 +20,13 @@ namespace qa_dotnet_cucumber.Pages
         //Locators
         private readonly By AddNewButton = By.XPath("//*[@id='account-profile-section']/div/section[2]/div/div/div/div[3]/form/div[2]/div/div[2]/div/table/thead/tr/th[3]/div");
         private readonly By AddLanguageField = By.XPath("//*[@id='account-profile-section']/div/section[2]/div/div/div/div[3]/form/div[2]/div/div[2]/div/div/div[1]/input");
-        private readonly By ProficiencyDropdown = By.XPath("//*[@id='account-profile-section']/div/section[2]/div/div/div/div[3]/form/div[2]/div/div[2]/div/div/div[2]/select");
+        private readonly By ProficiencyAddDropdown = By.XPath("//*[@id='account-profile-section']/div/section[2]/div/div/div/div[3]/form/div[2]/div/div[2]/div/div/div[2]/select");
         private readonly By AddButton = By.XPath("//*[@id='account-profile-section']/div/section[2]/div/div/div/div[3]/form/div[2]/div/div[2]/div/div/div[3]/input[1]");
         private readonly By CancelButton = By.XPath("//*[@id=\"account-profile-section\"]/div/section[2]/div/div/div/div[3]/form/div[2]/div/div[2]/div/div/div[3]/input[2]");
+        private readonly By EditButton = By.XPath("//*[@id=\"account-profile-section\"]/div/section[2]/div/div/div/div[3]/form/div[2]/div/div[2]/div/table/tbody/tr/td[3]/span[1]/i");
+        private readonly By UpdateButton = By.XPath("//*[@id='account-profile-section']/div/section[2]/div/div/div/div[3]/form/div[2]/div/div[2]/div/table/tbody/tr/td/div/span/input[1]");
+        private readonly By ProficiencyUpdateDropdown = By.XPath("//*[@id=\"account-profile-section\"]/div/section[2]/div/div/div/div[3]/form/div[2]/div/div[2]/div/table/tbody/tr/td/div/div[2]/select");
+        private readonly By UpdateLanguageField = By.XPath("//*[@id='account-profile-section']/div/section[2]/div/div/div/div[3]/form/div[2]/div/div[2]/div/table/tbody/tr/td/div/div[1]/input");
         public LanguagePage(IWebDriver driver) // Inject IWebDriver directly
         {
             _driver = driver;
@@ -43,10 +47,10 @@ namespace qa_dotnet_cucumber.Pages
 
         }
 
-        public void ProficiencyLevel (string level)
+        public void ProficiencyAddLevel (string level)
 
         {
-            var dropdown = _wait.Until(ExpectedConditions.ElementToBeClickable(ProficiencyDropdown));
+            var dropdown = _wait.Until(ExpectedConditions.ElementToBeClickable(ProficiencyAddDropdown));
             var select = new SelectElement(dropdown);
             select.SelectByText(level);
 
@@ -71,5 +75,67 @@ namespace qa_dotnet_cucumber.Pages
             return Driver.FindElements(By.XPath($"//div[text()='{language}']")).Any();
 
         }
+        public bool IsAddNewButtonVisible()
+        {
+            try
+            {
+                // Check if the element exists and is displayed
+                return Driver.FindElements(AddNewButton).Any(e => e.Displayed);
+            }
+            catch (NoSuchElementException)
+            {
+                // If element is not in the DOM at all
+                return false;
+            }
+        }
+
+        public void ClickEdit()
+
+        {
+            var editButtonElement = _wait.Until(ExpectedConditions.ElementToBeClickable(EditButton));
+            editButtonElement.Click();
+        }
+
+        public void ClickUpdate()
+
+        {
+            var updateButtonElement = _wait.Until(ExpectedConditions.ElementToBeClickable(UpdateButton));
+            updateButtonElement.Click();
+        }
+
+        public void ProficiencyUpdateLevel(string level)
+
+        {
+            var dropdown = _wait.Until(ExpectedConditions.ElementToBeClickable(ProficiencyUpdateDropdown));
+            var select = new SelectElement(dropdown);
+            select.SelectByText(level);
+
+        }
+
+        public void UpdateLanguage(string language)
+
+        {
+            var updateLanguageElement = _wait.Until(ExpectedConditions.ElementToBeClickable(UpdateLanguageField));
+            updateLanguageElement.Clear();
+            updateLanguageElement.SendKeys(language);
+
+        }
+
+        public string GetLanguage()
+        {
+            return _driver.FindElement(By.XPath("//*[@id='account-profile-section']/div/section[2]/div/div/div/div[3]/form/div[2]/div/div[2]/div/table/tbody/tr/td[1]")).Text;
+        }
+
+        public string GetLevel()
+        {
+            return _driver.FindElement(By.XPath("//*[@id='account-profile-section']/div/section[2]/div/div/div/div[3]/form/div[2]/div/div[2]/div/table/tbody/tr/td[2]")).Text;
+        }
+
+
+
+
+
+
+
     }
 }

@@ -30,7 +30,7 @@ namespace qa_dotnet_cucumber.Pages
             var signinButtonElement = _wait.Until(ExpectedConditions.ElementToBeClickable(SigninButton));
             signinButtonElement.Click();
         }
-   
+
 
 
 
@@ -56,4 +56,5 @@ namespace qa_dotnet_cucumber.Pages
             return _driver.FindElement(By.XPath("/html/body/div[2]/div/div/div[1]/div/div[4]/button")).Text.Contains("Login"); ;
         }
     }
+  
 }

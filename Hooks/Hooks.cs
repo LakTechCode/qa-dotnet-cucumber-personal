@@ -60,6 +60,11 @@ namespace qa_dotnet_cucumber.Hooks
             {
                 chromeOptions.AddArgument("--headless");
             }
+
+            // Disable password save popup
+            chromeOptions.AddUserProfilePreference("credentials_enable_service", false);
+            chromeOptions.AddUserProfilePreference("profile.password_manager_enabled", false);
+
             var driver = new ChromeDriver(chromeOptions);
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(_settings.Browser.TimeoutSeconds);
             driver.Manage().Window.Maximize();

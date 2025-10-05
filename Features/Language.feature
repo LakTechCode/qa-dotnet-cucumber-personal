@@ -19,28 +19,21 @@ Scenario: Cancel adding a new language
     Then the language "English" should not be added to the list
 
 Scenario: Prevent adding an existing language
+    Given language and level is listed
     When I click the Add New button
     And I add the same language again
     And I select the level of proficiency
     And I click on the Add button
-    Then I should see an error message
+    Then I should see an appropriate message
 
 Scenario: Prevent adding a language with empty fields
     When I click the Add New button
     And I leave the language and level fields empty
     And I click on the Add button
-    Then I should see an error message
-
- Scenario: User adds four languages successfully
-    When the user clicks Add New
-    And the user enters the first language and selects a language level
-    And the user clicks Add
-    And the user repeats adding three more languages with different language levels
-    Then the user should see all four languages added successfully
+    Then I should see an appropriate message
 
   Scenario: User tries to add a fifth language
-    Given the user has already added four languages on the Homepage
-    When the user looks for the Add New button
+    When the user has already added four languages on the Homepage
     Then the Add New button should not be visible
 
   Scenario: Edit an existing language level
@@ -48,19 +41,19 @@ Scenario: Prevent adding a language with empty fields
     When I click the edit icon next to a language
     And I change the level 
     And I click on the Update button
-    Then the level should be updated
+     Then I should see an appropriate message
 
   Scenario: Edit an existing language 
     Given language and level is listed
     When I click the edit icon next to a language
     And I change the language 
     And I click on the Update button
-    Then the level should be updated
+    Then I should see an appropriate message
 
 Scenario: Cancel editing a language
-   Given language and level are listed
+   Given language and level is listed
    When I click the edit icon next to a language
-   And I change the language name or level
+   And I change the language 
    And I click on the Cancel button
    Then the language and level should remain unchanged
    

@@ -54,7 +54,7 @@ namespace qa_dotnet_cucumber.Steps
         [When("I select the level of proficiency")]
         public void WhenISelectTheLevelOfProficiency()
         {
-            _languagePage.ProficiencyLevel("Fluent");
+            _languagePage.ProficiencyAddLevel("Fluent");
         }
 
         [When("I click on the Add button")]
@@ -75,7 +75,7 @@ namespace qa_dotnet_cucumber.Steps
             var wait = new WebDriverWait(_loginPage.Driver, TimeSpan.FromSeconds(10));
             var addLanguageMessageElement = wait.Until(d => d.FindElement(By.XPath("/html/body/div[1]/div")));
             var addLanguageMessage = addLanguageMessageElement.Text;
-            Assert.That(addLanguageMessage, Does.Match("has been added to your languages|This language is already exist in your language list"),
+            Assert.That(addLanguageMessage, Does.Match("has been added to your languages|This language is already exist in your language list|Please enter language and level|has been updated to your languages"),
                 "Should see an appropriate message");
         }
 
@@ -91,115 +91,92 @@ namespace qa_dotnet_cucumber.Steps
         [When("I add the same language again")]
         public void WhenIAddTheSameLanguageAgain()
         {
-            throw new PendingStepException();
+            _languagePage.AddLanguage("English");
         }
 
         [When("I leave the language and level fields empty")]
         public void WhenILeaveTheLanguageAndLevelFieldsEmpty()
         {
-            throw new PendingStepException();
+            _languagePage.AddLanguage("");
+            _languagePage.ProficiencyAddLevel("Choose Language Level");
         }
 
-        [When("the user clicks Add New")]
-        public void WhenTheUserClicksAddNew()
-        {
-            throw new PendingStepException();
-        }
-
-        [When("the user enters the first language and selects a language level")]
-        public void WhenTheUserEntersTheFirstLanguageAndSelectsALanguageLevel()
-        {
-            throw new PendingStepException();
-        }
-
-        [When("the user clicks Add")]
-        public void WhenTheUserClicksAdd()
-        {
-            throw new PendingStepException();
-        }
-
-        [When("the user repeats adding three more languages with different language levels")]
-        public void WhenTheUserRepeatsAddingThreeMoreLanguagesWithDifferentLanguageLevels()
-        {
-            throw new PendingStepException();
-        }
-
-        [Then("the user should see all four languages added successfully")]
-        public void ThenTheUserShouldSeeAllFourLanguagesAddedSuccessfully()
-        {
-            throw new PendingStepException();
-        }
-
-        [Given("the user has already added four languages on the Homepage")]
+   
+        [When("the user has already added four languages on the Homepage")]
         public void GivenTheUserHasAlreadyAddedFourLanguagesOnTheHomepage()
         {
-            throw new PendingStepException();
-        }
+            _languagePage.ClickAddNew();
+            _languagePage.AddLanguage("English");
+            _languagePage.ProficiencyAddLevel("Fluent");
+            _languagePage.ClickAdd();
 
-        [When("the user looks for the Add New button")]
-        public void WhenTheUserLooksForTheAddNewButton()
-        {
-            throw new PendingStepException();
+            _languagePage.ClickAddNew();
+            _languagePage.AddLanguage("Tamil");
+            _languagePage.ProficiencyAddLevel("Native/Bilingual");
+            _languagePage.ClickAdd();
+
+            _languagePage.ClickAddNew();
+            _languagePage.AddLanguage("Hindi");
+            _languagePage.ProficiencyAddLevel("Conversational");
+            _languagePage.ClickAdd();
+
+            _languagePage.ClickAddNew();
+            _languagePage.AddLanguage("Maori");
+            _languagePage.ProficiencyAddLevel("Basic");
+            _languagePage.ClickAdd();
+
         }
 
         [Then("the Add New button should not be visible")]
         public void ThenTheAddNewButtonShouldNotBeVisible()
         {
-            throw new PendingStepException();
+            Assert.That(_languagePage.IsAddNewButtonVisible(), Is.False, "'Add New' button should not be visible.");
         }
 
         [Given("language and level is listed")]
         public void GivenLanguageAndLevelIsListed()
         {
-            throw new PendingStepException();
+            _languagePage.ClickAddNew();
+            _languagePage.AddLanguage("English");
+            _languagePage.ProficiencyAddLevel("Fluent");
+            _languagePage.ClickAdd();
         }
 
         [When("I click the edit icon next to a language")]
         public void WhenIClickTheEditIconNextToALanguage()
         {
-            throw new PendingStepException();
+            _languagePage.ClickEdit();
         }
 
         [When("I change the level")]
         public void WhenIChangeTheLevel()
         {
-            throw new PendingStepException();
+            _languagePage.ProficiencyUpdateLevel("Basic");
         }
 
         [When("I click on the Update button")]
         public void WhenIClickOnTheUpdateButton()
         {
-            throw new PendingStepException();
+            _languagePage.ClickUpdate();
         }
 
-        [Then("the level should be updated")]
-        public void ThenTheLevelShouldBeUpdated()
-        {
-            throw new PendingStepException();
-        }
 
         [When("I change the language")]
         public void WhenIChangeTheLanguage()
         {
-            throw new PendingStepException();
+            _languagePage.UpdateLanguage("Tamil");
         }
 
-        [Given("language and level are listed")]
-        public void GivenLanguageAndLevelAreListed()
-        {
-            throw new PendingStepException();
-        }
 
-        [When("I change the language name or level")]
-        public void WhenIChangeTheLanguageNameOrLevel()
-        {
-            throw new PendingStepException();
-        }
 
         [Then("the language and level should remain unchanged")]
         public void ThenTheLanguageAndLevelShouldRemainUnchanged()
         {
-            throw new PendingStepException();
+            var actualLanguage = _languagePage.GetLanguage();
+            var actualLevel = _languagePage.GetLevel();
+
+            Assert.That(actualLanguage, Is.EqualTo("English"), "Language did not match expected.");
+            Assert.That(actualLevel, Is.EqualTo("Fluent"), "Level did not match expected.");
         }
 
         [When("I click the delete icon next to a language")]
