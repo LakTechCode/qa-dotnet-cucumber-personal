@@ -54,7 +54,7 @@ Scenario: Cancel editing a language
    Given language and level is listed
    When I click the edit icon next to a language
    And I change the language 
-   And I click on the Cancel button
+   And I click on the Cancel button on Edit Page
    Then the language and level should remain unchanged
    
    Scenario: Delete an existing language

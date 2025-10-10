@@ -27,6 +27,7 @@ namespace qa_dotnet_cucumber.Pages
         private readonly By UpdateButton = By.XPath("//*[@id='account-profile-section']/div/section[2]/div/div/div/div[3]/form/div[2]/div/div[2]/div/table/tbody/tr/td/div/span/input[1]");
         private readonly By ProficiencyUpdateDropdown = By.XPath("//*[@id=\"account-profile-section\"]/div/section[2]/div/div/div/div[3]/form/div[2]/div/div[2]/div/table/tbody/tr/td/div/div[2]/select");
         private readonly By UpdateLanguageField = By.XPath("//*[@id='account-profile-section']/div/section[2]/div/div/div/div[3]/form/div[2]/div/div[2]/div/table/tbody/tr/td/div/div[1]/input");
+        private readonly By CancelButtonEditPage = By.XPath("//*[@id=\"account-profile-section\"]/div/section[2]/div/div/div/div[3]/form/div[2]/div/div[2]/div/table/tbody/tr/td/div/span/input[2]");
         public LanguagePage(IWebDriver driver) // Inject IWebDriver directly
         {
             _driver = driver;
@@ -131,7 +132,12 @@ namespace qa_dotnet_cucumber.Pages
             return _driver.FindElement(By.XPath("//*[@id='account-profile-section']/div/section[2]/div/div/div/div[3]/form/div[2]/div/div[2]/div/table/tbody/tr/td[2]")).Text;
         }
 
+        public void ClickCancelinEditPage()
 
+        {
+            var cancelButtonEditPageElement = _wait.Until(ExpectedConditions.ElementToBeClickable(CancelButtonEditPage));
+            cancelButtonEditPageElement.Click();
+        }
 
 
 

@@ -167,7 +167,11 @@ namespace qa_dotnet_cucumber.Steps
             _languagePage.UpdateLanguage("Tamil");
         }
 
-
+        [When("I click on the Cancel button on Edit Page")]
+        public void WhenIClickOnTheCancelButtonOnEditPage()
+        {
+            _languagePage.ClickCancelinEditPage();
+        }
 
         [Then("the language and level should remain unchanged")]
         public void ThenTheLanguageAndLevelShouldRemainUnchanged()
