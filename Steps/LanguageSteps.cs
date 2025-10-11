@@ -1,19 +1,20 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using qa_dotnet_cucumber.Pages;
+using RazorEngine;
 using Reqnroll;
 using System;
 
 namespace qa_dotnet_cucumber.Steps
 {
     [Binding]
-    public class LanguageSteps 
+    public class LanguageSteps
 
     {
         private readonly LoginPage _loginPage;
         private readonly NavigationHelper _navigationHelper;
         private readonly LanguagePage _languagePage;
-      
+
         public LanguageSteps(LoginPage loginPage, NavigationHelper navigationHelper, LanguagePage languagePage)
         {
             _loginPage = loginPage;
@@ -25,10 +26,10 @@ namespace qa_dotnet_cucumber.Steps
         public void GivenIAmLoggedIn()
         {
             {
-                _navigationHelper.NavigateTo("");
+              // _navigationHelper.NavigateTo("");
 
-                _loginPage.ClickSignIn();
-                _loginPage.Login("test@test.com", "123123");
+              // _loginPage.ClickSignIn();
+              // _loginPage.Login("test@test.com", "123123");
 
                 var successMessage = _loginPage.GetSuccessMessage();
                 Assert.That(successMessage, Does.Contain("Hi Lakshmi"), "Should see successful login message");
@@ -45,8 +46,8 @@ namespace qa_dotnet_cucumber.Steps
         public void WhenIEnterTheLanguage()
         {
             _languagePage.AddLanguage("English");
-            
-  
+
+
 
         }
 
@@ -81,10 +82,10 @@ namespace qa_dotnet_cucumber.Steps
 
 
         [Then("the language {string} should not be added to the list")]
-        public void ThenTheLanguageShouldNotBeAddedToTheList (string language)
+        public void ThenTheLanguageShouldNotBeAddedToTheList(string language)
         {
-      
-       Assert.That(_languagePage.IsLanguageInList(language), Is.False,$"'{language}' should not be added after cancel.");
+
+            Assert.That(_languagePage.IsLanguageInList(language), Is.False, $"'{language}' should not be added after cancel.");
         }
 
 
@@ -101,7 +102,7 @@ namespace qa_dotnet_cucumber.Steps
             _languagePage.ProficiencyAddLevel("Choose Language Level");
         }
 
-   
+
         [When("the user has already added four languages on the Homepage")]
         public void GivenTheUserHasAlreadyAddedFourLanguagesOnTheHomepage()
         {
@@ -186,7 +187,18 @@ namespace qa_dotnet_cucumber.Steps
         [When("I click the delete icon next to a language")]
         public void WhenIClickTheDeleteIconNextToALanguage()
         {
-            throw new PendingStepException();
+            _languagePage.ClickDelete();
         }
+
+        [Then("the language {string} should be deleted")]
+        public void ThenTheLanguageShouldBeDeleted(string language)
+
+        { 
+        Assert.That(_languagePage.IsLanguageInList(language), Is.False, $"'{language}' should be deleted but is still present in the list.");
+            }
+       
+
+
+
     }
 }

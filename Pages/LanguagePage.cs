@@ -28,6 +28,7 @@ namespace qa_dotnet_cucumber.Pages
         private readonly By ProficiencyUpdateDropdown = By.XPath("//*[@id=\"account-profile-section\"]/div/section[2]/div/div/div/div[3]/form/div[2]/div/div[2]/div/table/tbody/tr/td/div/div[2]/select");
         private readonly By UpdateLanguageField = By.XPath("//*[@id='account-profile-section']/div/section[2]/div/div/div/div[3]/form/div[2]/div/div[2]/div/table/tbody/tr/td/div/div[1]/input");
         private readonly By CancelButtonEditPage = By.XPath("//*[@id=\"account-profile-section\"]/div/section[2]/div/div/div/div[3]/form/div[2]/div/div[2]/div/table/tbody/tr/td/div/span/input[2]");
+        private readonly By DeleteButton = By.XPath("//*[@id=\"account-profile-section\"]/div/section[2]/div/div/div/div[3]/form/div[2]/div/div[2]/div/table/tbody/tr/td[3]/span[2]/i");
         public LanguagePage(IWebDriver driver) // Inject IWebDriver directly
         {
             _driver = driver;
@@ -48,7 +49,7 @@ namespace qa_dotnet_cucumber.Pages
 
         }
 
-        public void ProficiencyAddLevel (string level)
+        public void ProficiencyAddLevel(string level)
 
         {
             var dropdown = _wait.Until(ExpectedConditions.ElementToBeClickable(ProficiencyAddDropdown));
@@ -139,9 +140,33 @@ namespace qa_dotnet_cucumber.Pages
             cancelButtonEditPageElement.Click();
         }
 
+        public void ClickDelete()
+
+        {
+            var deleteButtonElement = _wait.Until(ExpectedConditions.ElementToBeClickable(DeleteButton));
+            deleteButtonElement.Click();
+        }
+
+        public void DeleteAllLanguages()
+        {
+            // Repeatedly find delete icons and click them until none are left
+            while (true)
+            {
+                var deleteButtonElement = _driver.FindElements(By.XPath("//*[@id=\"account-profile-section\"]/div/section[2]/div/div/div/div[3]/form/div[2]/div/div[2]/div/table/tbody/tr/td[3]/span[2]/i"));
+                if (deleteButtonElement.Count == 0)
+                    break;
 
 
+                deleteButtonElement[0].Click();
 
+                // _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/html/body/div[1]/div")));
+                // _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath("/html/body/div[1]/div")));
 
+                Thread.Sleep(15000);
+
+                Console.Write("All languages deleted");
+            }
+
+        }
     }
 }

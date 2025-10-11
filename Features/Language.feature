@@ -60,5 +60,5 @@ Scenario: Cancel editing a language
    Scenario: Delete an existing language
     Given language and level is listed
     When I click the delete icon next to a language
-    Then the level should be updated
+    Then the language "English" should be deleted
 

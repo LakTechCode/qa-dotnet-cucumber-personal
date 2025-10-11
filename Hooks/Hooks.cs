@@ -53,6 +53,8 @@ namespace qa_dotnet_cucumber.Hooks
         [BeforeScenario]
         public void BeforeScenario(ScenarioContext scenarioContext)
         {
+           
+
             Console.WriteLine($"Starting {scenarioContext.ScenarioInfo.Title} on Thread {Thread.CurrentThread.ManagedThreadId} at {DateTime.Now}");
             new DriverManager().SetUpDriver(new ChromeConfig());
             var chromeOptions = new ChromeOptions();
@@ -62,6 +64,8 @@ namespace qa_dotnet_cucumber.Hooks
             }
 
             // Disable password save popup
+
+            chromeOptions.AddArgument("--incognito");
             chromeOptions.AddUserProfilePreference("credentials_enable_service", false);
             chromeOptions.AddUserProfilePreference("profile.password_manager_enabled", false);
 
@@ -69,9 +73,22 @@ namespace qa_dotnet_cucumber.Hooks
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(_settings.Browser.TimeoutSeconds);
             driver.Manage().Window.Maximize();
 
+            var navigationHelper = new NavigationHelper(driver);
+            var loginPage = new LoginPage(driver);
+            var languagePage = new LanguagePage(driver);
+
             _objectContainer.RegisterInstanceAs<IWebDriver>(driver);
-            _objectContainer.RegisterInstanceAs(new NavigationHelper(driver));
-            _objectContainer.RegisterInstanceAs(new LoginPage(driver));
+            _objectContainer.RegisterInstanceAs(navigationHelper);
+            _objectContainer.RegisterInstanceAs(loginPage);
+            _objectContainer.RegisterInstanceAs(languagePage);
+
+            //Navigate to login page
+           navigationHelper.NavigateTo("");
+
+           loginPage.ClickSignIn();
+           loginPage.Login("test@test.com", "123123");
+
+           languagePage.DeleteAllLanguages();
 
             lock (_reportLock)
             {
