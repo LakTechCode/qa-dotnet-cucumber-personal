@@ -16,6 +16,7 @@ namespace qa_dotnet_cucumber.Hooks
     public class Hooks
     {
         private readonly IObjectContainer _objectContainer;
+        private readonly FeatureContext _featureContext;
         private static ExtentReports? _extent;
         private static ExtentSparkReporter? _htmlReporter;
         private static TestSettings _settings;
@@ -24,9 +25,10 @@ namespace qa_dotnet_cucumber.Hooks
 
         public static TestSettings Settings => _settings;
 
-        public Hooks(IObjectContainer objectContainer)
+        public Hooks(IObjectContainer objectContainer, FeatureContext featureContext)
         {
             _objectContainer = objectContainer;
+            _featureContext = featureContext;
         }
 
         [BeforeTestRun]
@@ -53,7 +55,7 @@ namespace qa_dotnet_cucumber.Hooks
         [BeforeScenario]
         public void BeforeScenario(ScenarioContext scenarioContext)
         {
-           
+
 
             Console.WriteLine($"Starting {scenarioContext.ScenarioInfo.Title} on Thread {Thread.CurrentThread.ManagedThreadId} at {DateTime.Now}");
             new DriverManager().SetUpDriver(new ChromeConfig());
@@ -82,13 +84,28 @@ namespace qa_dotnet_cucumber.Hooks
             _objectContainer.RegisterInstanceAs(loginPage);
             _objectContainer.RegisterInstanceAs(languagePage);
 
-            //Navigate to login page
-           navigationHelper.NavigateTo("");
 
-           loginPage.ClickSignIn();
-           loginPage.Login("test@test.com", "123123");
+            var featureTags = _featureContext.FeatureInfo.Tags;
+            var scenarioTags = scenarioContext.ScenarioInfo.Tags;
+           
 
-           languagePage.DeleteAllLanguages();
+            bool hasLanguageTag = featureTags.Concat(scenarioTags)
+                                             .Any(t => t.Trim().Equals("language", StringComparison.OrdinalIgnoreCase));
+
+            if (hasLanguageTag)
+            {
+                Console.WriteLine("Language tag detected! Running login/navigation...");
+
+                navigationHelper.NavigateTo("");
+                loginPage.ClickSignIn();
+                loginPage.Login("test@test.com", "123123");
+                languagePage.DeleteAllLanguages();
+            }
+
+            else
+            {
+                Console.WriteLine("Language tag NOT detected!");
+            }
 
             lock (_reportLock)
             {

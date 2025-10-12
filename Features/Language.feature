@@ -1,4 +1,5 @@
-﻿Feature: Language functionality
+﻿@language
+Feature: Language functionality
 As a user, I want to add, edit, and delete languages with proficiency level so that I can accurately showcase my language skills
 
 Background:
