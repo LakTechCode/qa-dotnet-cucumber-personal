@@ -26,11 +26,7 @@ namespace qa_dotnet_cucumber.Steps
         public void GivenIAmLoggedIn()
         {
             {
-              // _navigationHelper.NavigateTo("");
-
-              // _loginPage.ClickSignIn();
-              // _loginPage.Login("test@test.com", "123123");
-
+              
                 var successMessage = _loginPage.GetSuccessMessage();
                 Assert.That(successMessage, Does.Contain("Hi Lakshmi"), "Should see successful login message");
             }
