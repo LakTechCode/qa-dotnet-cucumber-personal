@@ -1,4 +1,7 @@
+using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
 using qa_dotnet_cucumber.Pages;
+using RazorEngine;
 using Reqnroll;
 using System;
 
@@ -25,55 +28,65 @@ namespace qa_dotnet_cucumber
             _loginPage.ClickSignIn();
             _loginPage.Login("test@test.com", "123123");
 
-            _skillsPage.Click 
+            _skillsPage.ClickSkills(); 
         }
 
         [When("I click the Add New button on Skills page")]
         public void WhenIClickTheAddNewButtonOnSkillsPage()
         {
-            throw new PendingStepException();
+            _skillsPage.ClickAddNewonSkills();
         }
 
         [When("I enter the skill")]
         public void WhenIEnterTheSkill()
         {
-            throw new PendingStepException();
+            _skillsPage.AddSkill("Selenium");
         }
 
         [When("I select the level")]
         public void WhenISelectTheLevel()
         {
-            throw new PendingStepException();
+            _skillsPage.AddSkillLevel("Beginner");
         }
 
         [When("I click the Add button on Skills page")]
         public void WhenIClickTheAddButtonOnSkillsPage()
+     
         {
-            throw new PendingStepException();
+            _skillsPage.ClickAddonSkills();
         }
 
         [Then("I should see an appropriate message for Skills page")]
         public void ThenIShouldSeeAnAppropriateMessageForSkillsPage()
         {
-            throw new PendingStepException();
+            var wait = new WebDriverWait(_skillsPage.Driver, TimeSpan.FromSeconds(10));
+            var addSkillMessageElement = wait.Until(d => d.FindElement(By.XPath("/html/body/div[1]/div")));
+            Thread.Sleep(1000);
+            var addSkillMessage = addSkillMessageElement.Text;
+            Assert.That(addSkillMessage, Does.Match("has been added to your skills|has been updaed to your skills"),
+                "Should see an appropriate message"); ;
         }
 
         [When("I click on the Cancel button on Skills page")]
         public void WhenIClickOnTheCancelButtonOnSkillsPage()
         {
-            throw new PendingStepException();
+            _skillsPage.ClickCancelonSkills();
         }
 
         [Then("the Skill {string} should not be added to the list")]
-        public void ThenTheSkillShouldNotBeAddedToTheList(string selenium)
+        public void ThenTheSkillShouldNotBeAddedToTheList(string skill)
         {
-            throw new PendingStepException();
+
+            Assert.That(_skillsPage.IsSkillInList(skill), Is.False, $"'{skill}' should not be added after cancel.");
         }
 
         [Given("skill and level is listed")]
         public void GivenSkillAndLevelIsListed()
         {
-            throw new PendingStepException();
+            _skillsPage.ClickAddNewonSkills();
+            _skillsPage.AddSkill("Selenium");
+            _skillsPage.AddSkillLevel("Beginner");
+            _skillsPage.ClickAddonSkills();
         }
 
         [When("I add the same skill again")]
@@ -91,7 +104,7 @@ namespace qa_dotnet_cucumber
         [When("I click the edit icon next to a skill")]
         public void WhenIClickTheEditIconNextToASkill()
         {
-            throw new PendingStepException();
+            _skillsPage.ClickEditonSkills();
         }
 
         [When("I change the level on Skills page")]
@@ -103,14 +116,12 @@ namespace qa_dotnet_cucumber
         [When("I click on the Update button on Skills page")]
         public void WhenIClickOnTheUpdateButtonOnSkillsPage()
         {
-            throw new PendingStepException();
+            _skillsPage.UpdateSkill("JIRA");
         }
 
         [When("I change the skill")]
         public void WhenIChangeTheSkill()
-        {
-            throw new PendingStepException();
-        }
+        {  throw new PendingStepException(); }
 
         [When("I click on the Cancel button on Edit Page for Skills page")]
         public void WhenIClickOnTheCancelButtonOnEditPageForSkillsPage()

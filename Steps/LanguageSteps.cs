@@ -69,7 +69,7 @@ namespace qa_dotnet_cucumber.Steps
         [Then("I should see an appropriate message")]
         public void ThenIShouldSeeAnAppropriateMessage()
         {
-            var wait = new WebDriverWait(_loginPage.Driver, TimeSpan.FromSeconds(10));
+            var wait = new WebDriverWait(_languagePage.Driver, TimeSpan.FromSeconds(10));
             var addLanguageMessageElement = wait.Until(d => d.FindElement(By.XPath("/html/body/div[1]/div")));
             Thread.Sleep(1000);
             var addLanguageMessage = addLanguageMessageElement.Text;
