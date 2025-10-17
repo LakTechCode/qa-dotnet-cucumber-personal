@@ -159,8 +159,7 @@ namespace qa_dotnet_cucumber.Pages
 
                 deleteButtonElement[0].Click();
 
-                // _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("/html/body/div[1]/div")));
-                // _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath("/html/body/div[1]/div")));
+              
 
                 Thread.Sleep(15000);
 

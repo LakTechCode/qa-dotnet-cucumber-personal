@@ -3,9 +3,6 @@ Feature: Skills
 
 As a user, I want to add, edit, and delete skills with appropriate skill level so that I can accurately showcase my skills
 
-Background: 
-Given I am logged in and on Skills page
-
 Scenario: Add a new skill
 	When I click the Add New button on Skills page
 	And I enter the skill

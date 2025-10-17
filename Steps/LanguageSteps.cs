@@ -71,7 +71,7 @@ namespace qa_dotnet_cucumber.Steps
         {
             var wait = new WebDriverWait(_languagePage.Driver, TimeSpan.FromSeconds(10));
             var addLanguageMessageElement = wait.Until(d => d.FindElement(By.XPath("/html/body/div[1]/div")));
-            Thread.Sleep(1000);
+            Thread.Sleep(2000);
             var addLanguageMessage = addLanguageMessageElement.Text;
             Assert.That(addLanguageMessage, Does.Match("has been added to your languages|This language is already exist in your language list|Please enter language and level|has been updated to your languages"),
                 "Should see an appropriate message");

@@ -21,15 +21,7 @@ namespace qa_dotnet_cucumber
             _skillsPage = skillsPage;
         }
 
-        [Given("I am logged in and on Skills page")]
-        public void GivenIAmLoggedInAndOnSkillsPage()
-        {
-            _navigationHelper.NavigateTo("");
-            _loginPage.ClickSignIn();
-            _loginPage.Login("test@test.com", "123123");
-
-            _skillsPage.ClickSkills(); 
-        }
+ 
 
         [When("I click the Add New button on Skills page")]
         public void WhenIClickTheAddNewButtonOnSkillsPage()
@@ -61,9 +53,9 @@ namespace qa_dotnet_cucumber
         {
             var wait = new WebDriverWait(_skillsPage.Driver, TimeSpan.FromSeconds(10));
             var addSkillMessageElement = wait.Until(d => d.FindElement(By.XPath("/html/body/div[1]/div")));
-            Thread.Sleep(1000);
+            Thread.Sleep(2000);
             var addSkillMessage = addSkillMessageElement.Text;
-            Assert.That(addSkillMessage, Does.Match("has been added to your skills|has been updaed to your skills"),
+            Assert.That(addSkillMessage, Does.Match("has been added to your skills|has been updaed to your skills|This skill is already exist in your skill list|Please enter skill and experience level"),
                 "Should see an appropriate message"); ;
         }
 
@@ -92,13 +84,14 @@ namespace qa_dotnet_cucumber
         [When("I add the same skill again")]
         public void WhenIAddTheSameSkillAgain()
         {
-            throw new PendingStepException();
+            _skillsPage.AddSkill("Selenium");
         }
 
         [When("I leave the skill and level fields empty")]
         public void WhenILeaveTheSkillAndLevelFieldsEmpty()
         {
-            throw new PendingStepException();
+            _skillsPage.AddSkill("");
+            _skillsPage.AddSkillLevel("Choose Skill Level");
         }
 
         [When("I click the edit icon next to a skill")]
@@ -110,41 +103,50 @@ namespace qa_dotnet_cucumber
         [When("I change the level on Skills page")]
         public void WhenIChangeTheLevelOnSkillsPage()
         {
-            throw new PendingStepException();
+            _skillsPage.UpdateSkillLevel("Intermediate");
         }
+
 
         [When("I click on the Update button on Skills page")]
         public void WhenIClickOnTheUpdateButtonOnSkillsPage()
         {
-            _skillsPage.UpdateSkill("JIRA");
+            _skillsPage.ClickUpdateonSkills();
         }
 
         [When("I change the skill")]
         public void WhenIChangeTheSkill()
-        {  throw new PendingStepException(); }
+        {
+            _skillsPage.UpdateSkill("JIRA");
+        }
 
         [When("I click on the Cancel button on Edit Page for Skills page")]
         public void WhenIClickOnTheCancelButtonOnEditPageForSkillsPage()
         {
-            throw new PendingStepException();
+            {
+                _skillsPage.ClickCancelinEditPageforSkills();
+            }
         }
 
         [Then("the skill and level should remain unchanged")]
         public void ThenTheSkillAndLevelShouldRemainUnchanged()
         {
-            throw new PendingStepException();
+            var actualLanguage = _skillsPage.GetSkill();
+            var actualLevel = _skillsPage.GetLevel();
+
+            Assert.That(actualLanguage, Is.EqualTo("Selenium"), "Language did not match expected.");
+            Assert.That(actualLevel, Is.EqualTo("Beginner"), "Level did not match expected.");
         }
 
         [When("I click the delete icon next to a skill")]
         public void WhenIClickTheDeleteIconNextToASkill()
         {
-            throw new PendingStepException();
+            _skillsPage.ClickDeleteonSkills();
         }
 
         [Then("the skill {string} should be deleted")]
-        public void ThenTheSkillShouldBeDeleted(string selenium)
+        public void ThenTheSkillShouldBeDeleted(string skill)
         {
-            throw new PendingStepException();
+            Assert.That(_skillsPage.IsSkillInList(skill), Is.False, $"'{skill}' should be deleted but is still present in the list.");
         }
 
 

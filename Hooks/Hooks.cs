@@ -78,12 +78,13 @@ namespace qa_dotnet_cucumber.Hooks
             var navigationHelper = new NavigationHelper(driver);
             var loginPage = new LoginPage(driver);
             var languagePage = new LanguagePage(driver);
+            var skillsPage = new SkillsPage(driver);
 
             _objectContainer.RegisterInstanceAs<IWebDriver>(driver);
             _objectContainer.RegisterInstanceAs(navigationHelper);
             _objectContainer.RegisterInstanceAs(loginPage);
             _objectContainer.RegisterInstanceAs(languagePage);
-
+            _objectContainer.RegisterInstanceAs(skillsPage);
 
             var featureTags = _featureContext.FeatureInfo.Tags;
             var scenarioTags = scenarioContext.ScenarioInfo.Tags;
@@ -106,6 +107,26 @@ namespace qa_dotnet_cucumber.Hooks
             {
                 Console.WriteLine("Language tag NOT detected!");
             }
+
+            bool hasSkillsTag = featureTags.Concat(scenarioTags)
+                               .Any(t => t.Trim().Equals("skills", StringComparison.OrdinalIgnoreCase));
+
+            if (hasSkillsTag)
+            {
+                Console.WriteLine("Skills tag detected! Running login/navigation...");
+
+                navigationHelper.NavigateTo("");
+                loginPage.ClickSignIn();
+                loginPage.Login("test@test.com", "123123");
+                skillsPage.ClickSkills();
+                skillsPage.DeleteAllSkills();
+            }
+            else
+            {
+                Console.WriteLine("Skills tag NOT detected!");
+            }
+
+
 
             lock (_reportLock)
             {
