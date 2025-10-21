@@ -10,20 +10,30 @@ namespace qa_dotnet_cucumber.Pages
     {
         private readonly IWebDriver _driver;
         private readonly WebDriverWait _wait;
-        public IWebDriver Driver => _driver;  
+        public IWebDriver Driver => _driver;
 
         // Locators
-        private readonly By UsernameField = By.Id("username");
-        private readonly By PasswordField = By.Id("password");
-        private readonly By LoginButton = By.CssSelector("button[type='submit']");
-        private readonly By SuccessMessage = By.CssSelector(".flash.success");
+        private readonly By SigninButton = By.XPath("//*[@id=\"home\"]/div/div/div[1]/div/a");
+        private readonly By UsernameField = By.XPath("/html/body/div[2]/div/div/div[1]/div/div[1]/input");
+        private readonly By PasswordField = By.XPath("/html/body/div[2]/div/div/div[1]/div/div[2]/input");
+        private readonly By LoginButton = By.XPath("/html/body/div[2]/div/div/div[1]/div/div[4]/button");
+        private readonly By SuccessMessage = By.XPath("//*[@id=\"account-profile-section\"]/div/div[1]/div[2]/div/span");
 
         public LoginPage(IWebDriver driver) // Inject IWebDriver directly
         {
             _driver = driver;
             _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10)); // 10-second timeout
         }
-        
+
+        public void ClickSignIn()
+        {
+            var signinButtonElement = _wait.Until(ExpectedConditions.ElementToBeClickable(SigninButton));
+            signinButtonElement.Click();
+        }
+
+
+
+
         public void Login(string username, string password)
         {
             var usernameElement = _wait.Until(ExpectedConditions.ElementIsVisible(UsernameField));
@@ -43,7 +53,8 @@ namespace qa_dotnet_cucumber.Pages
 
         public bool IsAtLoginPage()
         {
-            return _driver.Title.Contains("The Internet");
+            return _driver.FindElement(By.XPath("/html/body/div[2]/div/div/div[1]/div/div[4]/button")).Text.Contains("Login"); ;
         }
     }
+  
 }

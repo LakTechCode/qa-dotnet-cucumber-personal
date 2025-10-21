@@ -16,6 +16,7 @@ namespace qa_dotnet_cucumber.Hooks
     public class Hooks
     {
         private readonly IObjectContainer _objectContainer;
+        private readonly FeatureContext _featureContext;
         private static ExtentReports? _extent;
         private static ExtentSparkReporter? _htmlReporter;
         private static TestSettings _settings;
@@ -24,9 +25,10 @@ namespace qa_dotnet_cucumber.Hooks
 
         public static TestSettings Settings => _settings;
 
-        public Hooks(IObjectContainer objectContainer)
+        public Hooks(IObjectContainer objectContainer, FeatureContext featureContext)
         {
             _objectContainer = objectContainer;
+            _featureContext = featureContext;
         }
 
         [BeforeTestRun]
@@ -53,6 +55,8 @@ namespace qa_dotnet_cucumber.Hooks
         [BeforeScenario]
         public void BeforeScenario(ScenarioContext scenarioContext)
         {
+
+
             Console.WriteLine($"Starting {scenarioContext.ScenarioInfo.Title} on Thread {Thread.CurrentThread.ManagedThreadId} at {DateTime.Now}");
             new DriverManager().SetUpDriver(new ChromeConfig());
             var chromeOptions = new ChromeOptions();
@@ -60,13 +64,69 @@ namespace qa_dotnet_cucumber.Hooks
             {
                 chromeOptions.AddArgument("--headless");
             }
+
+            // Disable password save popup
+
+            chromeOptions.AddArgument("--incognito");
+            chromeOptions.AddUserProfilePreference("credentials_enable_service", false);
+            chromeOptions.AddUserProfilePreference("profile.password_manager_enabled", false);
+
             var driver = new ChromeDriver(chromeOptions);
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(_settings.Browser.TimeoutSeconds);
             driver.Manage().Window.Maximize();
 
+            var navigationHelper = new NavigationHelper(driver);
+            var loginPage = new LoginPage(driver);
+            var languagePage = new LanguagePage(driver);
+            var skillsPage = new SkillsPage(driver);
+
             _objectContainer.RegisterInstanceAs<IWebDriver>(driver);
-            _objectContainer.RegisterInstanceAs(new NavigationHelper(driver));
-            _objectContainer.RegisterInstanceAs(new LoginPage(driver));
+            _objectContainer.RegisterInstanceAs(navigationHelper);
+            _objectContainer.RegisterInstanceAs(loginPage);
+            _objectContainer.RegisterInstanceAs(languagePage);
+            _objectContainer.RegisterInstanceAs(skillsPage);
+
+            var featureTags = _featureContext.FeatureInfo.Tags;
+            var scenarioTags = scenarioContext.ScenarioInfo.Tags;
+           
+
+            bool hasLanguageTag = featureTags.Concat(scenarioTags)
+                                             .Any(t => t.Trim().Equals("language", StringComparison.OrdinalIgnoreCase));
+
+            if (hasLanguageTag)
+            {
+                Console.WriteLine("Language tag detected! Running login/navigation...");
+
+                navigationHelper.NavigateTo("");
+                loginPage.ClickSignIn();
+                loginPage.Login("test@test.com", "123123");
+                languagePage.DeleteAllLanguages();
+            }
+
+            else
+            {
+                Console.WriteLine("Language tag NOT detected!");
+            }
+
+            bool hasSkillsTag = featureTags.Concat(scenarioTags)
+                               .Any(t => t.Trim().Equals("skills", StringComparison.OrdinalIgnoreCase));
+
+            if (hasSkillsTag)
+            {
+                Console.WriteLine("Skills tag detected! Running login/navigation...");
+
+                navigationHelper.NavigateTo("");
+                loginPage.ClickSignIn();
+                loginPage.Login("test@test.com", "123123");
+                skillsPage.ClickSkills();
+                skillsPage.DeleteAllSkills();
+            }
+            else
+            {
+                Console.WriteLine("Skills tag NOT detected!");
+            }
+
+
 
             lock (_reportLock)
             {
